@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .idea/
+*.env
+migrations/
 
 # C extensions
 *.so
@@ -103,7 +105,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+DS2022_30441_Filip_Denisa_1_Backend/.env
 .venv
 env/
 venv/
