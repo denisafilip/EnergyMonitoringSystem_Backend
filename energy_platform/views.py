@@ -7,6 +7,8 @@ from .models import User
 from .renderers import UserJSONRenderer
 from .serializers import UserSerializer, LoginSerializer, RegistrationSerializer
 
+import traceback
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('email')
@@ -35,11 +37,8 @@ class RegistrationAPIView(APIView):
     renderer_classes = (UserJSONRenderer,)
 
     def post(self, request):
-        user = request.data.get('user', {})
+        user = request.data
 
-        # The create serializer, validate serializer, save serializer pattern
-        # below is common and you will see it a lot throughout this course and
-        # your own work later on. Get familiar with it.
         serializer = self.serializer_class(data=user)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -53,7 +52,17 @@ class LoginAPIView(APIView):
     serializer_class = LoginSerializer
 
     def post(self, request):
-        user = request.data.get('user', {})
+        user = request.data
+
+        if not user["email"]:
+            return Response({
+                'error': ['Email field cannot be blank!'],
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if not user["password"]:
+            return Response({
+                'error': ['Password field cannot be blank!'],
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = self.serializer_class(data=user, context={'request': self.request})
         serializer.is_valid(raise_exception=True)

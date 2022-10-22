@@ -72,13 +72,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def token(self):
-        """
-        Allows us to get a user's token by calling `user.token` instead of
-        `user.generate_jwt_token().
-
-        The `@property` decorator above makes this possible. `token` is called
-        a "dynamic property".
-        """
         return self._generate_jwt_token()
 
     @property
