@@ -16,6 +16,4 @@ class UserJSONRenderer(JSONRenderer):
         if token is not None and isinstance(token, bytes):
             data['token'] = token.decode('utf-8')
 
-        # Finally, we can render our data under the "user" namespace.
-        print(data)
         return json.dumps(data)
