@@ -5,18 +5,23 @@ from rest_framework.views import APIView
 
 from .models import User
 from .renderers import UserJSONRenderer
-from .serializers import UserSerializer, LoginSerializer, RegistrationSerializer
+from . import serializers
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class ClientViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.filter(role="CLIENT").values().order_by('email')
+    serializer_class = serializers.UserSerializer
+
+
+class DeviceViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('email')
-    serializer_class = UserSerializer
+    serializer_class = serializers.DeviceSerializer
 
 
 class RegistrationAPIView(APIView):
     # Allow any user (authenticated or not) to hit this endpoint.
     permission_classes = (AllowAny,)
-    serializer_class = RegistrationSerializer
+    serializer_class = serializers.RegistrationSerializer
     renderer_classes = (UserJSONRenderer,)
 
     def post(self, request):
@@ -47,7 +52,7 @@ class RegistrationAPIView(APIView):
 class LoginAPIView(APIView):
     permission_classes = (AllowAny,)
     renderer_classes = (UserJSONRenderer,)
-    serializer_class = LoginSerializer
+    serializer_class = serializers.LoginSerializer
 
     def post(self, request):
         user = request.data
