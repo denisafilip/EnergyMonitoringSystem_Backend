@@ -5,6 +5,7 @@ __pycache__/
 .idea/
 *.env
 migrations/
+data/
 
 # C extensions
 *.so
