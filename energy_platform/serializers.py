@@ -12,7 +12,7 @@ class UserSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ('id', 'description', 'address', 'max_hourly_consumption')
+        fields = ('id', 'name', 'description', 'address', 'max_hourly_consumption')
 
 
 class RegistrationSerializer(serializers.ModelSerializer):

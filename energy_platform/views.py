@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User
+from .models import User, Device
 from .renderers import UserJSONRenderer
 from . import serializers
 
@@ -12,10 +12,25 @@ class ClientViewSet(viewsets.ModelViewSet):
     queryset = User.objects.filter(role="CLIENT").values().order_by('email')
     serializer_class = serializers.UserSerializer
 
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = User.objects.filter(role="CLIENT").values().order_by('email')
+        email = self.request.query_params.get('email')
+        if email is not None:
+            queryset = queryset.filter(email=email)
+        return queryset
+
 
 class DeviceViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('email')
+    queryset = Device.objects.all().order_by('description')
     serializer_class = serializers.DeviceSerializer
+
+    def update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return super().update(request, *args, **kwargs)
 
 
 class RegistrationAPIView(APIView):

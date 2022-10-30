@@ -80,12 +80,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Device(models.Model):
+    name = models.CharField(max_length=100, default="Name")
     description = models.CharField(max_length=500)
     address = models.CharField(max_length=200)
     max_hourly_consumption = models.IntegerField()
 
     def __str__(self):
-        return f"Description: {self.description}, from {self.address}, consumes {self.max_hourly_consumption} per hour."
+        return f"Device {self.name} from {self.address}, consumes {self.max_hourly_consumption} per hour."
 
 
 class UserToDevice(models.Model):
