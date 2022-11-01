@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User, Device
+from .models import User, Device, UserToDevice, Consumption
 from .renderers import UserJSONRenderer
 from . import serializers
 
@@ -11,10 +11,6 @@ from . import serializers
 class ClientViewSet(viewsets.ModelViewSet):
     queryset = User.objects.filter(role="CLIENT").values().order_by('email')
     serializer_class = serializers.UserSerializer
-
-    def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return super().update(request, *args, **kwargs)
 
     def get_queryset(self):
         queryset = User.objects.filter(role="CLIENT").values().order_by('email')
@@ -25,12 +21,25 @@ class ClientViewSet(viewsets.ModelViewSet):
 
 
 class DeviceViewSet(viewsets.ModelViewSet):
-    queryset = Device.objects.all().order_by('description')
+    queryset = Device.objects.all().order_by('name')
     serializer_class = serializers.DeviceSerializer
 
-    def update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return super().update(request, *args, **kwargs)
+    def get_queryset(self):
+        queryset = Device.objects.values().order_by('name')
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = queryset.filter(name=name)
+        return queryset
+
+
+class UserToDeviceViewSet(viewsets.ModelViewSet):
+    queryset = UserToDevice.objects.all()
+    serializer_class = serializers.UserToDeviceSerializer
+
+
+class ConsumptionViewSet(viewsets.ModelViewSet):
+    queryset = Consumption.objects.all()
+    serializer_class = serializers.ConsumptionSerializer
 
 
 class RegistrationAPIView(APIView):
