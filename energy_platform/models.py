@@ -64,7 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         dt = datetime.now() + timedelta(days=60)
 
         token = jwt.encode({
+            'id': self.pk,
             'email': self.email,
+            'role': self.role,
             'exp': dt
         }, settings.SECRET_KEY, algorithm='HS256')
 
@@ -90,12 +92,12 @@ class Device(models.Model):
 
 
 class UserToDevice(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
 
 
 class Consumption(models.Model):
-    mapping_id = models.ForeignKey(UserToDevice, on_delete=models.CASCADE)
+    mapping = models.ForeignKey(UserToDevice, on_delete=models.CASCADE)
     consumption = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

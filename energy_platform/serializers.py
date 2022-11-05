@@ -18,13 +18,13 @@ class DeviceSerializer(serializers.ModelSerializer):
 class UserToDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserToDevice
-        fields = ('id', 'user_id', 'device_id')
+        fields = ('id', 'user', 'device')
 
 
 class ConsumptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consumption
-        fields = ('id', 'mapping_id', 'consumption', 'timestamp')
+        fields = ('id', 'mapping', 'consumption', 'timestamp')
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
