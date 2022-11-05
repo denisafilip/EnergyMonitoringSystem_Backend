@@ -6,6 +6,10 @@ __pycache__/
 *.env
 migrations/
 data/
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 # C extensions
 *.so
 

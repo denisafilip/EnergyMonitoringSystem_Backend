@@ -65,6 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         token = jwt.encode({
             'id': self.pk,
+            'email': self.email,
+            'role': self.role,
             'exp': dt
         }, settings.SECRET_KEY, algorithm='HS256')
 
@@ -80,21 +82,22 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Device(models.Model):
+    name = models.CharField(max_length=100, default="Name")
     description = models.CharField(max_length=500)
     address = models.CharField(max_length=200)
     max_hourly_consumption = models.IntegerField()
 
     def __str__(self):
-        return f"Description: {self.description}, from {self.address}, consumes {self.max_hourly_consumption} per hour."
+        return f"Device {self.name} from {self.address}, consumes {self.max_hourly_consumption} per hour."
 
 
 class UserToDevice(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    device = models.ForeignKey(Device, on_delete=models.CASCADE)
 
 
 class Consumption(models.Model):
-    mapping_id = models.ForeignKey(UserToDevice, on_delete=models.CASCADE)
+    mapping = models.ForeignKey(UserToDevice, on_delete=models.CASCADE)
     consumption = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from energy_platform.models import User, Device
+from energy_platform.models import User, Device, UserToDevice, Consumption
 from django.contrib.auth import authenticate
 
 
@@ -12,7 +12,19 @@ class UserSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Device
-        fields = ('id', 'description', 'address', 'max_hourly_consumption')
+        fields = ('id', 'name', 'description', 'address', 'max_hourly_consumption')
+
+
+class UserToDeviceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserToDevice
+        fields = ('id', 'user', 'device')
+
+
+class ConsumptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Consumption
+        fields = ('id', 'mapping', 'consumption', 'timestamp')
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
