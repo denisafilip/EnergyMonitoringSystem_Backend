@@ -14,7 +14,7 @@ ENV POSTGRES_USER=postgres
 ENV POSTGRES_PASSWORD=root
 ENV POSTGRES_HOST=postgres-integration
 ENV POSTGRES_PORT=5432
-git s
+
 RUN pip install --upgrade pip  
 
 COPY ./DS2022_30441_Filip_Denisa_1_Backend $DockerHOME
