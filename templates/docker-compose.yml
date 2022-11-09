@@ -1,0 +1,34 @@
+version: "3.9"
+   
+services:
+  postgres_db:
+    container_name: "assignment1_backend_db"
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=energy_platform
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+  web:
+    container_name: "assignment1_backend_web"
+    build: .
+    command: >
+      bash -c "python manage.py migrate
+      && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_DB=energy_platform
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_HOST=postgres_db
+      - POSTGRES_PORT=5432
+    depends_on:
+      - postgres_db
