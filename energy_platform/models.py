@@ -88,12 +88,15 @@ class Device(models.Model):
     max_hourly_consumption = models.IntegerField()
 
     def __str__(self):
-        return f"Device {self.name} from {self.address}, consumes {self.max_hourly_consumption} per hour."
+        return f"Device {self.name} from {self.address}, consumes max {self.max_hourly_consumption}."
 
 
 class UserToDevice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     device = models.ForeignKey(Device, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Mapping between client {self.user} and device {self.device}."
 
 
 class Consumption(models.Model):
@@ -101,3 +104,5 @@ class Consumption(models.Model):
     consumption = models.IntegerField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"Consumption for {self.mapping} is {self.consumption} at {self.timestamp}."

@@ -4,9 +4,6 @@ services:
   postgres_db:
     container_name: "assignment1_backend_db"
     image: postgres
-    command: >
-      bash -c "psql -U postgres
-      && CREATE DATABASE energy_platform;"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     ports:
