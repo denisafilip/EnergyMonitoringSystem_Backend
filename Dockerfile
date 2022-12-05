@@ -20,5 +20,4 @@ RUN pip install --upgrade pip
 COPY ./DS2022_30441_Filip_Denisa_1_Backend $DockerHOME
 RUN pip install -r requirements.txt  
 EXPOSE 8000
-# CMD python manage.py migrate --noinput
-# CMD python manage.py runserver
+

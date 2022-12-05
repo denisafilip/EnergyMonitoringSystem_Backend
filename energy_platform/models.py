@@ -101,7 +101,7 @@ class UserToDevice(models.Model):
 
 class Consumption(models.Model):
     mapping = models.ForeignKey(UserToDevice, on_delete=models.CASCADE)
-    consumption = models.IntegerField()
+    consumption = models.FloatField()
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
