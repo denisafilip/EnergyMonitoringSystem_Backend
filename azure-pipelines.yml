@@ -29,17 +29,14 @@ stages:
       name: local
     steps:
     - script: |
-        python -m pip install --upgrade pip setuptools wheel django
         pip install -r $(Build.SourcesDirectory)/requirements.txt
       displayName: 'Install prerequisites'
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: django-integration
+        repository: $(imageRepository)
         dockerfile: $(Build.SourcesDirectory)/Dockerfile
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
-    - script: |
-        pip install -r $(Build.SourcesDirectory)/requirements.txt
