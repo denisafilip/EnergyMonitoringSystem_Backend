@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from energy_platform.models import User, Device, UserToDevice, Consumption
+from energy_platform.models import User, Device, UserToDevice, Consumption, ChatMessage
 from django.contrib.auth import authenticate
+# from django_grpc_framework import proto_serializers
+# from .grpc_gen import chat_pb2
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -65,3 +67,9 @@ class LoginSerializer(serializers.Serializer):
             'role': user.role,
             'token': user.token,
         }
+
+"""class ChatMessageProtoSerializer(proto_serializers.ModelProtoSerializer):
+    class Meta:
+        model = ChatMessage
+        proto_class = chat_pb2.ChatMessage
+        fields = ['id', 'sender', 'receiver', 'content']"""

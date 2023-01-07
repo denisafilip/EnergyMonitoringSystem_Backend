@@ -106,3 +106,13 @@ class Consumption(models.Model):
 
     def __str__(self):
         return f"Consumption for {self.mapping} is {self.consumption} at {self.timestamp}."
+
+
+class ChatMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender", null=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver", null=True)
+    content = models.CharField(max_length=1000)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        return f"{self.sender.email}: {self.content}"

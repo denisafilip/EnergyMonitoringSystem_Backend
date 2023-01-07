@@ -18,6 +18,6 @@ ENV POSTGRES_PORT=5432
 RUN pip install --upgrade pip  
 
 COPY ./DS2022_30441_Filip_Denisa_1_Backend $DockerHOME
-RUN pip install -r $(build.sourcesDirectory)/requirements.txt  
+RUN pip install -r requirements.txt
 EXPOSE 8000
 

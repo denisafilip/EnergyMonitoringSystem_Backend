@@ -1,0 +1,6 @@
+google==3.0.0
+grpc-django==1.0.0
+grpcio==1.51.1
+grpcio-tools==1.51.1
+grpclib==0.4.3
+protobuf==4.21.12

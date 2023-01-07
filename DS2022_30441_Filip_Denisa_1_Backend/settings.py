@@ -11,6 +11,7 @@ from pathlib import Path
 import environ
 import datetime
 import os
+from grpc_django import GRPCSettings, GRPCService
 
 from corsheaders.defaults import default_headers, default_methods
 
@@ -43,6 +44,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'channels',
+    'django_grpc_framework',
+    'grpc_django'
 ]
 
 MIDDLEWARE = [

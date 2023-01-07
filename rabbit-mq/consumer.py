@@ -4,10 +4,6 @@ import json
 import requests
 import websockets
 import asyncio
-import environ
-
-env = environ.Env()
-environ.Env.read_env()
 
 
 async def send_notification(client_id, device_id, max_hourly_consumption, total_sensor_value):
@@ -46,39 +42,44 @@ def get_device_max_hourly_consumption(device_id):
     return 0
 
 
-msg_number = -1
-prev_sensor_value = 0
+device_received_msg = {}
 
 def callback(ch, method, properties, body):
-    global msg_number
-    global prev_sensor_value
+    global device_received_msg
 
     print(json.loads(body))
     received_message = json.loads(body)
-    sensor_value = received_message["measurement_value"]
-    msg_number += 1
+    # sensor_value = received_message["measurement_value"]
+    device_id = received_message["device_id"]
+    device_received_msg[device_id] = device_received_msg.get(device_id, {
+        "msg_number": -1,
+        "sensor_value": received_message["measurement_value"],
+        "prev_sensor_value": 0,
+        "total_sensor_value": 0
+    })
+    device_received_msg[device_id]["msg_number"] += 1
+    device_received_msg[device_id]["sensor_value"] = received_message["measurement_value"]
 
-    if msg_number != 0 and msg_number % 6 == 0:
-        # device_id = received_message["device_id"]
-        device_id = env("DEVICE_ID")
+    if device_received_msg[device_id]["msg_number"] != 0 and device_received_msg[device_id]["msg_number"] % 6 == 0:
+        print(device_received_msg)
         max_hourly_consumption = get_device_max_hourly_consumption(device_id)
         response = requests.get("http://localhost:8000/api/mappings/", params={"device": device_id})
-        total_sensor_value = sensor_value - prev_sensor_value
-        prev_sensor_value = sensor_value
+        device_received_msg[device_id]["total_sensor_value"] = device_received_msg[device_id]["sensor_value"] - device_received_msg[device_id]["prev_sensor_value"]
+        device_received_msg[device_id]["prev_sensor_value"] = device_received_msg[device_id]["sensor_value"]
 
         if response.json():
             mapping = response.json()[0]
             mapping_id = mapping["id"]
             client_id = mapping["user"]
 
-            if total_sensor_value > max_hourly_consumption:
+            if device_received_msg[device_id]["total_sensor_value"] > max_hourly_consumption:
                 # notify client through web socket
-                asyncio.run(send_notification(client_id, device_id, max_hourly_consumption, total_sensor_value))
+                asyncio.run(send_notification(client_id, device_id, max_hourly_consumption, device_received_msg[device_id]["total_sensor_value"]))
                 return
 
             consumption_data = {
                 "mapping": mapping_id,
-                "consumption": total_sensor_value
+                "consumption": device_received_msg[device_id]["total_sensor_value"]
             }
             print(consumption_data)
 

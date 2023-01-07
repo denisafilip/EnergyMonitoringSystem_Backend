@@ -2,8 +2,17 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.views import View
+from django.http import JsonResponse
 
-from .models import User, Device, UserToDevice, Consumption
+from concurrent import futures
+
+import grpc
+
+#from grpc_gen1.chat_pb2 import SendMessageResponse, GetMessagesResponse
+#from energy_platform.grpc_gen.chat_pb2_grpc import add_ChatServiceServicer_to_server, ChatServiceServicer
+
+from .models import User, Device, UserToDevice, Consumption, ChatMessage
 from .renderers import UserJSONRenderer
 from . import serializers
 
@@ -118,3 +127,49 @@ class LoginAPIView(APIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+
+
+"""
+class GRPCView(View):
+    def post(self, request):
+        # Create a servicer instance
+        servicer = ChatServiceServicer()
+
+        # Implement the SendMessage method
+        def send_message(request, context):
+            # Save the message to the database
+            ChatMessage.objects.create(
+                user=request.user, message=request.message
+            )
+            return SendMessageResponse(success=True)
+
+        servicer.SendMessage = send_message
+
+        # Implement the GetMessages method
+        def get_messages(request, context):
+            # Query the database for messages after the specified timestamp
+            messages = ChatMessage.objects.filter(
+                timestamp__gt=request.after_timestamp
+            ).order_by('timestamp')
+
+            # Stream the messages back to the client
+            for message in messages:
+                yield GetMessagesResponse(
+                    user=message.user, message=message.message,
+                    timestamp=message.timestamp
+                )
+
+        servicer.GetMessages = get_messages
+
+        # Add the servicer to the server and handle the request
+        server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+        add_ChatServiceServicer_to_server(servicer, server)
+        server.add_insecure_port('[::]:50051')
+        server.start()
+        request_data = request.body
+        response_data = server.handle_request(request_data)
+        server.stop(0)
+
+        # Return the response to the client
+        return JsonResponse(response_data, status=200)
+"""

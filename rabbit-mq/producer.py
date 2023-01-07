@@ -28,20 +28,19 @@ def parse_sensor_csv(path):
 
 
 def send_messages(channel, sensor_values):
-    # the producer can send messages to an exchange
+    # the rabbit-mq can send messages to an exchange
     # exchange - recevies messages from produces and pushes them to queues
     channel.exchange_declare(exchange='sensors',
                              exchange_type='fanout')
     device_id = env("DEVICE_ID")
     for value in sensor_values:
-        #             "timestamp": int(datetime.now().timestamp()),
         data = {
             "device_id": int(device_id),
             "measurement_value": float(value)
         }
         print(data)
         channel.basic_publish(exchange='sensors', routing_key='', body=json.dumps(data))
-        time.sleep(600)
+        time.sleep(2)
 
 
 if __name__ == "__main__":
@@ -49,7 +48,7 @@ if __name__ == "__main__":
     channel = None
     try:
         conn, channel = create_connection()
-        sensor_values = parse_sensor_csv("producer\sensor.csv")
+        sensor_values = parse_sensor_csv("rabbit-mq\sensor.csv")
         send_messages(channel, sensor_values)
     except:
         raise
