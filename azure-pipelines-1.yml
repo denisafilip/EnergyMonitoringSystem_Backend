@@ -10,9 +10,9 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '112ecbae-3477-4def-aa96-cf961eede068'
-  imageRepository: 'denisafilip30441backend'
-  containerRegistry: 'containterregistrydenisafilip30441.azurecr.io'
+  dockerRegistryServiceConnection: '383f2a5d-cd19-40ac-aace-4bdafe2167c5'
+  imageRepository: 'dsfilipdenisabackend'
+  containerRegistry: 'containerregistrydenisafilip30441.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
@@ -28,16 +28,17 @@ stages:
     pool:
       name: local
     steps:
-    - script: |
-        pip install -r $(Build.SourcesDirectory)/requirements.txt
+    - task: CmdLine@2
       displayName: 'Install prerequisites'
+      inputs:
+        script: |
+          pip install -r $(Build.SourcesDirectory)/requirements.txt
     - task: Docker@2
       displayName: Build and push an image to container registry
       inputs:
         command: buildAndPush
-        repository: $(containerRegistry)/$(imageRepository)
-        dockerfile: $(Build.SourcesDirectory)/Dockerfile
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          latest
-          $(Build.BuildId)
+          $(tag)
