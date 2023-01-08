@@ -11,12 +11,6 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
 
     def sendMessage(self, request, context):
         # Implement the logic for handling a message sent from the client
-        # sender = models.User.objects.filter(email=request.sender).first()
-        # receiver = models.User.objects.filter(email=request.receiver).first()
-        """if sender and receiver:
-            models.ChatMessage.objects.create(
-                sender=sender, receiver=receiver, content=request.content
-            )"""
         print(f"Received message from {request.sender}: {request.content}")
         self.messages.append(chat_pb2.ChatMessage(sender=request.sender,
                                                   receiver=request.receiver,
