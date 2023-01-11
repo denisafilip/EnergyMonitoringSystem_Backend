@@ -19,3 +19,11 @@ class ChatMessage(_message.Message):
 class Empty(_message.Message):
     __slots__ = []
     def __init__(self) -> None: ...
+
+class Notification(_message.Message):
+    __slots__ = ["receiver", "sender"]
+    RECEIVER_FIELD_NUMBER: _ClassVar[int]
+    SENDER_FIELD_NUMBER: _ClassVar[int]
+    receiver: str
+    sender: str
+    def __init__(self, sender: _Optional[str] = ..., receiver: _Optional[str] = ...) -> None: ...

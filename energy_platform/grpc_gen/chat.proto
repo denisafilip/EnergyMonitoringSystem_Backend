@@ -3,6 +3,7 @@ syntax = "proto3";
 service ChatService {
   rpc sendMessage(ChatMessage) returns (Empty) {}
   rpc receiveMessage(Empty) returns (stream ChatMessage) {}
+  rpc typeMessage(Notification) returns (Empty) {}
 }
 
 message ChatMessage {
@@ -14,4 +15,9 @@ message ChatMessage {
 
 message Empty {
 
+}
+
+message Notification {
+  string sender = 1;
+  string receiver = 2;
 }

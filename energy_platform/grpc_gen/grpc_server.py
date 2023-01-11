@@ -23,6 +23,10 @@ class ChatService(chat_pb2_grpc.ChatServiceServicer):
         for message in self.messages:
             yield message
 
+    def typeMessage(self, request, context):
+        print(f"{request.sender} started typing its message to {request.receiver}.")
+        return chat_pb2.Empty()
+
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
