@@ -4,6 +4,8 @@
 
 Written in *Django*, the web framework of Python, using *RabbitMQ* for asynchronous communication, *Web Sockets* for notification system implementation and *gRPC (Google Remote Procedure Call)* for a chat system between the administrator of the system and the existing clients.
 
+## Request-Reply Communication Paradigm
+
 ### Requirements
 An online platform should be designed and implemented to manage users, their associated smart energy metering devices, and the monitored data from each device. The system can be accessed by two types of users after a login process: *administrator (manager)*, and *clients*. The administrator can perform CRUD (Create-Read-Update-Delete) operations on user accounts (defined by ID, name, role: admin/client), registered smart energy metering devices (defined by ID, description, address, maximum hourly energy consumption), and on the mapping of users to devices (each user can own one or more smart devices in different locations). After the mapping is done, for each device the energy consumption is stored on hourly basis as tuples of the form <timestamp, energy consumption> in the database.
 
