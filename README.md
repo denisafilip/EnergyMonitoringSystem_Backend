@@ -60,3 +60,11 @@ The application is deployed using Docker containers, that can communicate with o
 The backend can be accessed at ```http://localhost:8000/api```, and the frontend at ```http://localhost:4200```.
 
 The Web API was built using the *Django REST Framework*, which is a powerful and flexible toolkit.
+
+The Web API is the following:
+![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api.png)
+
+Moreover, if accessing ```http://localhost:8000/api/devices``` for example, we can **GET** all the devices created in the platform and can perform **POST** requests, to add other devices.
+![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api_clients.png)
+
+To perform **PUT** requests, we need to access a specific device, for example ```http://localhost:8000/api/devices/1```:
