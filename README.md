@@ -2,7 +2,7 @@
 
 ### Online Energy Utility Platform - an integrated energy monitoring system that stores energy consumption data for clients and their smart metering devices.
 
-Written in *Django*, the web framework of Python, using *RabbitMQ* for asynchronous communication, *Web Sockets* for notification system implementation and *gRPC (Google Remote Procedure Call)* for a chat system between the administrator of the system and the existing clients.
+Written in *Django*, the web framework of Python, using *RabbitMQ* for asynchronous communication, *Web Sockets* for notification system implementation and *gRPC (Google Remote Procedure Call)* for a chat system between the administrator of the system and the existing clients. Uses a relational database, *PostgreSQL*.
 
 ## Request-Reply Communication Paradigm
 
@@ -25,11 +25,13 @@ the other role (e.g., by log-in and then copy-paste the admin URL to the browser
 ### Requirements
 A *Smart Metering Device Simulator* module will be the *Message Producer*. It will simulate a sensor by reading energy data from a .csv file (one value at every 10 minutes) and sends data in the form _<timestamp, device_id, measurement_value>_ to the *Message Broker* (i.e., the queue). The timestamp is taken from the local clock, the measurement_value is read from the file and represents the energy measured in kWh, and the device_id is unique to each instance of the Smart Metering Device Simulator and corresponds to the device_id of a user from the database. The sensor simulator is a standalone application, a Python script. 
 The measurements are sent to the queue using the following JSON format:
+  
     ```{
     “timestamp": 1570654800000,
     “device_id”: “5c2494a3-1140-4c7a-991a-a1a2561c6bc2”
     “measurement_value”: 0.1,
     }```
+  
 A *Message Consumer* application will pre-process the data to compute the total hourly energy consumption and stores it in the database. If the computed total hourly energy consumption exceeds the smart device maximum value (as it appears in the database) it notifies asynchronously the user on their web interface, using WebSockets.
 
 ### Functional requirements:
@@ -53,7 +55,7 @@ session.
 communication types its message
 
 
-# How To Use
+# Web API
 
 The application is deployed using Docker containers, that can communicate with one another through a private network. To deploy the application, you have to create first the private network, which can be achieved by running the script ```create-private-network.bat```. Then, run the script ```redeploy.bat```, which will delete all existing Docker containers and images required by the application (if existent), and then rebuild the images and the containers.
 
@@ -64,7 +66,19 @@ The Web API was built using the *Django REST Framework*, which is a powerful and
 The Web API is the following:
 ![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api.png)
 
+## Web API Description:
+- ```api/devices```: Used for handling the devices of the platform, whose energy is tracked in the application.
+- ```api/clients```: Used for handling the clients of the platform, that wish to track the consumed energy of their devices.
+- ```api/mappings```: Used for assigning a device to a client.
+- ```api/consumptions```: Used for tracking the consumed energy of a device that belongs to a client, registered at a specific datetime.
+
 Moreover, if accessing ```http://localhost:8000/api/devices``` for example, we can **GET** all the devices created in the platform and can perform **POST** requests, to add other devices.
-![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api_clients.png)
+![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api_devices.png)
 
 To perform **PUT** requests, we need to access a specific device, for example ```http://localhost:8000/api/devices/1```:
+![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api_devices_1.png)
+
+# Data Models
+
+The relational database used was written with PostgreSQL. The application requires only four tables:
+
