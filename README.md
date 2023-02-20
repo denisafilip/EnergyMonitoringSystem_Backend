@@ -78,7 +78,7 @@ Moreover, if accessing ```http://localhost:8000/api/devices``` for example, we c
 To perform **PUT** requests, we need to access a specific device, for example ```http://localhost:8000/api/devices/1```:
 ![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/rest_api_devices_1.png)
 
-# Data Models
+# Data Model
 
 The relational database used was written with PostgreSQL. The application requires only four tables:
-
+![Alt text](https://github.com/denisafilip/EnergyMonitoringSystem_Backend/blob/main/screenshots/database.png)
