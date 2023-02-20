@@ -5,9 +5,6 @@ services:
   postgres-integration:
     container_name: postgres-integration
     image: postgres
-    #command: >
-    #  bash -c "psql -U postgres
-    #  && CREATE DATABASE energy_platform;"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     ports:
@@ -22,6 +19,27 @@ services:
     networks:
         assignment1-network:
             ipv4_address: 172.16.0.52
+            
+  rabbitmq-integration:
+    container_name: rabbitmq-integration
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+    networks:
+        assignment1-network:
+            ipv4_address: 172.16.0.55
+                
+  redis-integration:
+    container_name: redis-integration
+    image: redis:7.0
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+        assignment1-network:
+            ipv4_address: 172.16.0.56
          
   django-integration:
     container_name: django-integration
@@ -47,6 +65,28 @@ services:
     networks:
         assignment1-network:
             ipv4_address: 172.16.0.53
+            
+  envoy-proxy:
+    container_name: envoy-proxy
+    image: envoyproxy/envoy-dev:4634ffdf32752e70a4186fcaf269dca8ff004395 
+    ports:
+      - "9901:9901"
+      - "10000:10000"
+      - "8080:8080"
+    restart: always
+    command: envoy -c /home/envoy.yaml
+    volumes:
+      - ./DS2022_30441_Filip_Denisa_1_Frontend/energy_platform/envoy.yaml:/home/envoy.yaml
+      
+  grpc-server-integration:
+    container_name: grpc-server-integration
+    build:
+      context: ./   
+      dockerfile: ./DS2022_30441_Filip_Denisa_1_Backend/energy_platform/grpc_gen/Dockerfile 
+    command: python grpc_server.py
+    ports:
+        - "50051:50051"
+    restart: always
     
   angular-integration:
     container_name: angular-integration
@@ -56,9 +96,12 @@ services:
     restart: always
     ports:
       - "4200:80"
+    depends_on:
+      - envoy-proxy
     networks:
         assignment1-network:
             ipv4_address: 172.16.0.54
+   
 
 volumes:
     postgres-integration:
