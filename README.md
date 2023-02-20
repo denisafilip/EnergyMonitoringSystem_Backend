@@ -51,3 +51,12 @@ session.
 - A notification is displayed for the user when the other user reads the message.
 - A notification is displayed for the user (e.g., typing) while the user from the other end of
 communication types its message
+
+
+# How To Use
+
+The application is deployed using Docker containers, that can communicate with one another through a private network. To deploy the application, you have to create first the private network, which can be achieved by running the script ```create-private-network.bat```. Then, run the script ```redeploy.bat```, which will delete all existing Docker containers and images required by the application (if existent), and then rebuild the images and the containers.
+
+The backend can be accessed at ```http://localhost:8000/api```, and the frontend at ```http://localhost:4200```.
+
+The Web API was built using the *Django REST Framework*, which is a powerful and flexible toolkit.
